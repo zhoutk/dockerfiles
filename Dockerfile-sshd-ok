@@ -1,0 +1,16 @@
+FROM ubuntu:18.04
+
+RUN set -ex \
+    && sed -i "s/archive.ubuntu.com/mirrors.aliyun.com/g" /etc/apt/sources.list \
+    && sed -i "s/security.ubuntu.com/mirrors.aliyun.com/g" /etc/apt/sources.list \
+    && apt-get update && apt-get upgrade --no-install-recommends -y \
+    && apt-get install openssh-server vim git zsh autojump --no-install-recommends -y \
+    && passwd -u root \
+    && cd /home && mkdir -p zhoutk/softs && cd zhoutk/softs \
+    && echo "PermitRootLogin yes" >> /etc/ssh/sshd_config \
+    && mkdir /run/sshd \
+    && echo "root:a1b2c3" | chpasswd 
+
+EXPOSE 22 3000
+
+CMD ["/usr/sbin/sshd", "-D"]
